@@ -19,6 +19,10 @@ public class Rocket : MonoBehaviour
     [SerializeField] AudioClip Explosion;
     [SerializeField] AudioClip Success;
 
+    [SerializeField] ParticleSystem ThrustParticles;
+    [SerializeField] ParticleSystem ExplosionParticles;
+    [SerializeField] ParticleSystem SuccessParticles;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -48,11 +52,15 @@ public class Rocket : MonoBehaviour
             case "Finish":
                 state = RocketState.Transcending;
                 audioSource.Stop();
+                ThrustParticles.Stop();
+                SuccessParticles.Play();
                 audioSource.PlayOneShot(Success);
                 Invoke("LoadNextScene", 2f);
                 break;
             default:
                 state = RocketState.Dying;
+                ThrustParticles.Stop();
+                ExplosionParticles.Play();
                 audioSource.Stop();
                 audioSource.PlayOneShot(Explosion);
                 Invoke("LoadNextScene", 2f);
@@ -68,10 +76,12 @@ public class Rocket : MonoBehaviour
 
             if (!audioSource.isPlaying)
                 audioSource.PlayOneShot(Engine);
+            ThrustParticles.Play();
         }
         else
         {
             audioSource.Stop();
+            ThrustParticles.Stop();
         }
     }
 
