@@ -15,6 +15,8 @@ public class Rocket : MonoBehaviour
     [SerializeField] float RCSThrust = 100f;
     [SerializeField] float MainThrust = 100f;
 
+    [SerializeField] float LevelLoadDelay = 1f;
+
     [SerializeField] AudioClip Engine;
     [SerializeField] AudioClip Explosion;
     [SerializeField] AudioClip Success;
@@ -55,7 +57,7 @@ public class Rocket : MonoBehaviour
                 ThrustParticles.Stop();
                 SuccessParticles.Play();
                 audioSource.PlayOneShot(Success);
-                Invoke("LoadNextScene", 2f);
+                Invoke("LoadNextScene", LevelLoadDelay);
                 break;
             default:
                 state = RocketState.Dying;
@@ -63,7 +65,7 @@ public class Rocket : MonoBehaviour
                 ExplosionParticles.Play();
                 audioSource.Stop();
                 audioSource.PlayOneShot(Explosion);
-                Invoke("LoadNextScene", 2f);
+                Invoke("LoadNextScene", LevelLoadDelay);
                 break;
         }
     }
