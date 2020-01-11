@@ -12,8 +12,12 @@ public class Rocket : MonoBehaviour
 
     RocketState state = RocketState.Alive;
 
-    [SerializeField] float rcsThrust = 100f;
-    [SerializeField] float mainThrust = 100f;
+    [SerializeField] float RCSThrust = 100f;
+    [SerializeField] float MainThrust = 100f;
+
+    [SerializeField] AudioClip Engine;
+    [SerializeField] AudioClip Explosion;
+    [SerializeField] AudioClip Success;
 
     // Start is called before the first frame update
     void Start()
@@ -30,10 +34,6 @@ public class Rocket : MonoBehaviour
             Thrust();
             Rotate();
         }
-        else
-        {
-            audioSource.Stop();
-        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -46,10 +46,15 @@ public class Rocket : MonoBehaviour
             case "Friendly":
                 break;
             case "Finish":
-                Invoke("LoadNextScene", 5f);
+                state = RocketState.Transcending;
+                audioSource.Stop();
+                audioSource.PlayOneShot(Success);
+                Invoke("LoadNextScene", 2f);
                 break;
             default:
                 state = RocketState.Dying;
+                audioSource.Stop();
+                audioSource.PlayOneShot(Explosion);
                 Invoke("LoadNextScene", 2f);
                 break;
         }
@@ -59,10 +64,10 @@ public class Rocket : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rigidBody.AddRelativeForce(Vector3.up * mainThrust);
+            rigidBody.AddRelativeForce(Vector3.up * MainThrust);
 
             if (!audioSource.isPlaying)
-                audioSource.Play();
+                audioSource.PlayOneShot(Engine);
         }
         else
         {
@@ -74,7 +79,7 @@ public class Rocket : MonoBehaviour
     {
         rigidBody.freezeRotation = true; // take manual control of rotation
 
-        float rotationSpeed = rcsThrust * Time.deltaTime;
+        float rotationSpeed = RCSThrust * Time.deltaTime;
 
         if (Input.GetKey(KeyCode.A))
         {
