@@ -33,8 +33,8 @@ public class Oscillator : MonoBehaviour
         Vector3 offset = movementFactor * movementVector;
 
         float rawSinWave = Mathf.Sin(cycles * tau); //goes from -1 to +1
-
-        movementFactor = rawSinWave / 2f + 0.5f; // goes from 0 to 1
+        
+        movementFactor = (Mathf.Pow(rawSinWave, 2)); // rawSinWave / 2f + 0.5f; // goes from 0 to 1
 
         transform.position = startingPos + offset;
     }
