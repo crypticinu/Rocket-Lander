@@ -8,7 +8,7 @@ public class Oscillator : MonoBehaviour
 
 {
     [SerializeField] Vector3 movementVector = new Vector3(15.8f, 0f, 0f);
-    [SerializeField] float period = 2f;
+    [SerializeField] float period = 5f;
 
     [Range(0, 1)]
     float movementFactor; //0 moved // 1 for fully moved

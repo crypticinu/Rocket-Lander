@@ -11,8 +11,6 @@ public class Rocket : MonoBehaviour
     enum RocketState { Alive, Dying, Transcending }
     RocketState state = RocketState.Alive;
 
-    int level = 0;
-
     [SerializeField] float RCSThrust = 100f;
     [SerializeField] float MainThrust = 100f;
 
@@ -69,7 +67,7 @@ public class Rocket : MonoBehaviour
                 ExplosionParticles.Play();
                 audioSource.Stop();
                 audioSource.PlayOneShot(Explosion);
-                Invoke("LoadNextScene", LevelLoadDelay);
+                Invoke("LoadFirstScene", LevelLoadDelay);
                 break;
         }
     }
@@ -111,8 +109,19 @@ public class Rocket : MonoBehaviour
 
     private void LoadNextScene()
     {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextSceneIndex = currentSceneIndex + 1;
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
+        {
+            nextSceneIndex = 0;
+        }
         state = RocketState.Alive;
-        SceneManager.LoadScene(level);
+        SceneManager.LoadScene(nextSceneIndex);
+    }
+    private void LoadFirstScene()
+    {
+        state = RocketState.Alive;
+        SceneManager.LoadScene(0);
     }
 
     void RespondToDebugKeys()
@@ -121,7 +130,6 @@ public class Rocket : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.L))
             {
-                level = 1;
                 Invoke("LoadNextScene", 0f);
             }
             else if (Input.GetKeyDown(KeyCode.C))
